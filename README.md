@@ -1,4 +1,5 @@
 # NikkiNoble_microservices
+
 NikkiNoble microservices repository
 
 # Технология контейнеризации. Введение в Docker
@@ -9,21 +10,20 @@ NikkiNoble microservices repository
 
 * Создан Docker хост в Yandex Cloud и настроено локальное окружение на работу с ним
 
-
         yc compute instance create \
         --name docker-host \
         --zone ru-central1-a \
         --network-interface subnet-name=default-ru-central1-a,nat-ip-version=ipv4 \
         --create-boot-disk image-folder-id=standard-images,image-family=ubuntu-1804-lts,size=15 \
         --ssh-key ~/.ssh/appuser.pub
-	
+
         docker-machine create \
         --driver generic \
         --generic-ip-address=51.250.11.100 \
         --generic-ssh-user yc-user \
         --generic-ssh-key ~/.ssh/appuser \
         docker-host
-  
+
         eval $(docker-machine env docker-host)
 
         $ docker-machine ls
@@ -45,15 +45,18 @@ NikkiNoble microservices repository
 - Запуск и работа приложения на основе Docker-образов
 
 Новая структура приложения: каталог `scr`, три компонента - `post-py`, `comment`, `ui`
-* ./post-py/Dockerfile
-* ./comment/Dockerfile
-* ./ui/Dockerfile
+
+- ./post-py/Dockerfile
+- ./comment/Dockerfile
+- ./ui/Dockerfile
+
 ### Сборка приложения
 
         docker pull mongo:latest
         docker build -t nikkinoble/post:1.0 ./post-py
         docker build -t nikkinoble/comment:1.0 ./comment
         docker build -t nikkinoble/ui:1.0 ./ui
+
 ### Запуск приложения
 
         docker network create reddit
@@ -62,7 +65,7 @@ NikkiNoble microservices repository
         docker run -d --network=reddit --network-alias=comment nikkinoble/comment:1.0
         docker run -d --network=reddit -p 9292:9292 nikkinoble/ui:1.0
 
-### Улучшаем образ 
+### Улучшаем образ
 
         FROM ubuntu:16.04
         RUN apt-get update \
@@ -91,4 +94,4 @@ NikkiNoble microservices repository
         docker run -d --network=reddit --network-alias=post nikkinoble/post:1.0
         docker run -d --network=reddit --network-alias=comment nikkinoble/comment:1.0
         docker run -d --network=reddit -p 9292:9292 nikkinoble/ui:2.0
-        
+
