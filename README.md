@@ -95,3 +95,26 @@ NikkiNoble microservices repository
         docker run -d --network=reddit --network-alias=comment nikkinoble/comment:1.0
         docker run -d --network=reddit -p 9292:9292 nikkinoble/ui:2.0
 
+# Docker: сети, docker-compose
+
+* ## Работа с сетями в Docker
+- **none**
+
+        docker run -ti --rm --network none joffotron/docker-net-tools -c ifconfig
+
+- **host**
+
+        docker run -ti --rm --network host joffotron/docker-net-tools -c ifconfig
+        docker network create back_net --subnet=10.0.2.0/24 
+        docker network create front_net --subnet=10.0.1.0/24
+- **bridge**
+
+        docker network create reddit --driver bridge
+* ## Использование docker-compose
+- файл docker-compose.yml
+
+        docker-compose up -d 
+        docker-compose ps
+- Параметризованные параметры находятся в отдельном файле c расширением .env
+- Базовое имя проекта образовывается от директории в котором находится файл docker-compose.yml.
+- Имя проекта можно задать с помощью ключа "-p" или с помощью переменной окружения "COMPOSE_PROJECT_NAME".
